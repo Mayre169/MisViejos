@@ -1,0 +1,299 @@
+@import "tailwindcss";
+@import "./animations.css";
+
+ /* Variables CSS para el modo claro (por defecto) */
+        :root {
+            --header-background-color: #111; /* Encabezado oscuro */
+            --header-font-color: #f0f0f0;    /* Texto del encabezado claro */
+            --body-background-color: #ffffff; /* Fondo principal claro */
+            --body-font-color: #1a1a1a;        /* Texto del cuerpo oscuro (más oscuro que 111 para contraste) */
+            --secondary-background-color: #f5fffe; /* Fondo secundario claro (para main) */
+            --card-background-color: #ffffff; /* Fondo de cards */
+            --button-background-color: #007bff; /* Fondo de botón azul */
+            --button-text-color: #ffffff; /* Texto de botón blanco */
+            --footer-background-color: #111; /* Fondo de footer oscuro */
+            --footer-font-color: #f0f0f0; /* Texto de footer claro */
+
+            --header-shadow-color: rgba(0, 0, 0, 0.2); /* Sombra para el header en modo claro */
+            --border-color: #d1d5db; /* Color de borde para la barra de búsqueda (gris claro de Tailwind) */
+            --input-background-color: #f9fafb; /* Fondo de input en modo claro */
+            --placeholder-color: #9ca3af; /* Color de placeholder en modo claro */
+            --loading-container-bg: #e0e0e0; /* Fondo del contenedor de carga */
+            --loading-border-color: #b6b6b6; /* Borde de carga */
+            --loading-border-top-color: #0077ff; /* Borde superior de carga */
+            --category-overlay-bg: rgba(0, 0, 0, 0.6); /* Superposición de categoría oscura */
+            --category-overlay-text: #fff; /* Texto de superposición de categoría siempre blanco */
+        }
+
+        /* Variables CSS para el modo oscuro */
+        .home.dark-mode {
+            --header-background-color: #f0f0f0; /* Encabezado claro */
+            --header-font-color: #1a1a1a;        /* Texto del encabezado oscuro */
+            --body-background-color: #1a1a1a; /* Fondo principal oscuro */
+            --body-font-color: #f0f0f0;        /* Texto del cuerpo claro */
+            --secondary-background-color: #2b2b2b; /* Fondo secundario oscuro (para main) */
+            --card-background-color: #374151; /* Fondo de cards oscuro */
+            --button-background-color: #4CAF50; /* Fondo de botón verde */
+            --button-text-color: #ffffff; /* Texto de botón blanco */
+            --footer-background-color: #f0f0f0; /* Fondo de footer claro */
+            --footer-font-color: #1a1a1a; /* Texto de footer oscuro */
+
+            --header-shadow-color: rgba(255, 255, 255, 0.1); /* Sombra para el header en modo oscuro */
+            --border-color: #4b5563; /* Color de borde más oscuro (gris de Tailwind) */
+            --input-background-color: #374151; /* Fondo de input en modo oscuro */
+            --placeholder-color: #9ca3af; /* Color de placeholder en modo oscuro */
+            --loading-container-bg: #333; /* Fondo del contenedor de carga oscuro */
+            --loading-border-color: #555; /* Borde de carga oscuro */
+            --loading-border-top-color: #4CAF50; /* Borde superior de carga diferente */
+            --category-overlay-bg: rgba(255, 255, 255, 0.2); /* Superposición de categoría clara */
+            --category-overlay-text: #1a1a1a; /* Texto de superposición de categoría siempre oscuro */
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+
+        /* Estilos base con transiciones suaves para el modo oscuro/claro */
+        body {
+            font-family: 'Inter', sans-serif; /* Puedes elegir una fuente moderna si lo deseas */
+            background-color: var(--body-background-color);
+            color: var(--body-font-color);
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Estilos específicos para el encabezado */
+        .header {
+            background-color: var(--header-background-color);
+            color: var(--header-font-color);
+            box-shadow: 0 4px 6px -1px var(--header-shadow-color), 0 2px 4px -2px var(--header-shadow-color); /* Sombra de Tailwind */
+            transition: background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .header .logo {
+            color: var(--header-font-color);
+        }
+
+        .header .links a,
+        .header .options i {
+            color: var(--header-font-color);
+        }
+
+        .header .links a {
+            background-image: linear-gradient(to right, var(--header-font-color) 50%, transparent 50%), linear-gradient(to left, var(--header-font-color) 50%, transparent 50%);
+            background-position: bottom;
+            background-size: 0% 2px;
+            background-repeat: no-repeat;
+            transition: background-size 0.4s ease-out;
+        }
+
+        .header .links a:hover {
+            background-size: 100% 2px;
+        }
+
+        /* Estilos para la sección de bienvenida */
+        .info-welcome {
+            background-color: var(--secondary-background-color);
+            transition: background-color 0.5s ease;
+        }
+
+        .info-welcome h2 {
+            color: var(--body-font-color);
+        }
+
+        .info-welcome > p {
+            color: var(--body-font-color);
+        }
+
+        /* Estilos de la barra de navegación/búsqueda */
+        .navigation-bar {
+            background-color: var(--body-background-color);
+            transition: background-color 0.5s ease;
+        }
+        .navigation-bar i {
+            color: var(--body-font-color);
+            padding-left: 1rem;
+            padding-right: 0rem;
+        }
+
+        .search-bar {
+            border: 1px solid var(--border-color);
+            color: var(--body-font-color);
+            background-color: var(--input-background-color);
+            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+        }
+        .search-bar::placeholder {
+            color: var(--placeholder-color);
+        }
+
+        /* Estilos de las categorías destacadas */
+        .featured-category {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .featured-category:hover {
+            transform: scale(1.05); /* Ligeramente menos agresivo para una estética moderna */
+        }
+
+        .category-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%; /* Cubre toda la imagen */
+            background-color: var(--category-overlay-bg);
+            color: var(--category-overlay-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: clamp(1rem, 4vw, 1.5rem); /* Tamaño de fuente responsivo */
+            z-index: 1;
+            border-radius: 9999px; /* Totalmente redondo como la imagen */
+            font-weight: 600;
+        }
+
+        .featured-category:hover .category-overlay {
+            opacity: 1;
+        }
+
+        .featured-category img {
+            display: block;
+            width: 100%; /* Asegura que la imagen ocupe todo el contenedor */
+            border-radius: 9999px; /* Clases de Tailwind para redondo completo */
+            object-fit: cover; /* Asegura que la imagen se ajuste bien */
+        }
+
+        /* Estilo del botón 'more-info' */
+        .more-info {
+            background-color: var(--body-font-color);
+            color: var(--body-background-color);
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        .more-info i {
+            color: var(--body-background-color);
+        }
+
+        /* Estilos para las tarjetas de procedimiento y productos */
+        .procedure-card, .product-card {
+            background-color: var(--card-background-color);
+            color: var(--body-font-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.5s ease, color 0.5s ease, box-shadow 0.3s ease;
+        }
+        body.dark-mode .procedure-card, body.dark-mode .product-card {
+            box-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.05), 0 2px 4px -2px rgba(255, 255, 255, 0.03);
+        }
+
+        .product-card button {
+            background-color: var(--button-background-color);
+            color: var(--button-text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Estilos del cargador */
+        .loading-container {
+            background-color: var(--loading-container-bg);
+            transition: opacity 0.5s ease, background-color 0.5s ease;
+            position: fixed; /* Asegura que cubra toda la pantalla */
+            top: 0;
+            left: 0;
+            z-index: 9999; /* Asegura que esté por encima de todo */
+        }
+
+        .loading {
+            border-color: var(--loading-border-color);
+            border-top-color: var(--loading-border-top-color);
+            animation: load 1s ease infinite;
+        }
+
+        @keyframes load {
+            to {
+                transform: rotate(360deg);
+            }
+            from {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Estilos del footer */
+        .footer {
+            background-color: var(--footer-background-color);
+            color: var(--footer-font-color);
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        .footer a {
+            color: var(--footer-font-color);
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        .footer a:hover {
+            opacity: 1;
+        }
+
+        /* Animaciones CSS para los elementos principales */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0; /* Asegura que el elemento esté oculto inicialmente */
+        }
+        .animate-fade-in-delay {
+            animation: fadeIn 0.8s ease-out 0.2s forwards; /* Retraso */
+            opacity: 0;
+        }
+
+        /* Media Queries para pantallas más pequeñas */
+        @media (max-width: 768px) { /* Usamos un breakpoint común de Tailwind */
+            .links, .options {
+                display: none;
+            }
+            .menu-burger {
+                display: block !important; /* Asegura que se muestre en móvil */
+                pointer-events: all;
+                color: var(--header-font-color);
+            }
+            .header {
+                justify-content: space-between;
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+            .navigation-bar {
+                width: 90%; /* Más ancho en móvil */
+            }
+            .featured-categories {
+                flex-direction: column;
+                align-items: center;
+                width: 90%;
+            }
+            .featured-category {
+                width: 60%; /* Ajusta el tamaño de la categoría en móvil */
+                margin-bottom: 2.5rem;
+            }
+            .info-welcome h2 {
+                text-align: center;
+                padding: 0 1rem;
+            }
+            .procedure-section .grid {
+                grid-template-columns: 1fr; /* Una columna en móvil */
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 1 o 2 columnas en móvil */
+                gap: 1.5rem;
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-content > div {
+                margin-bottom: 1rem;
+            }
+        }
