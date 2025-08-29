@@ -1,0 +1,236 @@
+{% extends "base_dashboard.html" %}
+
+{% block bootstrap %}<!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">Gestión de Usuarios</h2>
+
+    <!-- Resumen en Cards -->
+    <div class="row text-center mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>👥 Usuarios Totales</h5>
+                    <h3>1,245</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>🆕 Nuevos este mes</h5>
+                    <h3>120</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>✅ Activos</h5>
+                    <h3>1,100</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>🚫 Bloqueados</h5>
+                    <h3>45</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Usuarios Registrados por Mes</h5>
+                    <canvas id="usuariosMes"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Distribución por Rol</h5>
+                    <canvas id="rolesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Usuarios -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Lista de Usuarios</h5>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>101</td>
+                        <td>juanperez</td>
+                        <td>juan@example.com</td>
+                        <td><span class="badge bg-primary">Cliente</span></td>
+                        <td><span class="badge bg-success">Activo</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal">✏️</button>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bloquearUsuarioModal">🔒</button>
+                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#resetClaveModal">🔑</button>
+                            <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#cambiarRolModal">🎭</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>102</td>
+                        <td>maria123</td>
+                        <td>maria@example.com</td>
+                        <td><span class="badge bg-success">Admin</span></td>
+                        <td><span class="badge bg-danger">Bloqueado</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal">✏️</button>
+                            <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#bloquearUsuarioModal">🔓</button>
+                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#resetClaveModal">🔑</button>
+                            <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#cambiarRolModal">🎭</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+
+<!-- Editar Usuario -->
+<div class="modal fade" id="editarUsuarioModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Nombre de Usuario</label>
+            <input type="text" class="form-control" value="juanperez">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Correo</label>
+            <input type="email" class="form-control" value="juan@example.com">
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bloquear/Desbloquear Usuario -->
+<div class="modal fade" id="bloquearUsuarioModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Acción</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        ¿Seguro que quieres bloquear/desbloquear a este usuario?
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-danger">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Resetear Clave -->
+<div class="modal fade" id="resetClaveModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Resetear Contraseña</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        ¿Quieres enviar un correo de recuperación de contraseña a este usuario?
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-info">Enviar Correo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cambiar Rol -->
+<div class="modal fade" id="cambiarRolModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cambiar Rol</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <label class="form-label">Selecciona un rol</label>
+          <select class="form-select">
+            <option>Cliente</option>
+            <option>Admin</option>
+            <option>Empleado</option>
+          </select>
+          <div class="mt-3">
+            <button type="submit" class="btn btn-secondary">Cambiar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts de Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Usuarios por mes
+    new Chart(document.getElementById('usuariosMes'), {
+        type: 'line',
+        data: {
+            labels: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago'],
+            datasets: [{
+                label: 'Usuarios',
+                data: [50, 70, 90, 120, 150, 200, 250, 300],
+                borderColor: 'blue',
+                backgroundColor: 'rgba(0,0,255,0.1)',
+                fill: true
+            }]
+        }
+    });
+
+    // Distribución por rol
+    new Chart(document.getElementById('rolesChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Cliente', 'Admin', 'Empleado'],
+            datasets: [{
+                data: [900, 100, 245],
+                backgroundColor: ['#36a2eb','#ff6384','#ffce56']
+            }]
+        }
+    });
+</script>
+
+{% endblock %}

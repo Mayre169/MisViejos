@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Cliente</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard_client.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">Mis Viejos</h2>
+        <ul class="menu">
+            <li class="active">🏠 Inicio</li>
+            <li>📦 Mis Pedidos</li>
+            <li>🛒 Catálogo</li>
+            <li>👤 Mi Perfil</li>
+            <li>🔓 Cerrar sesión</li>
+        </ul>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Header -->
+        <header class="header">
+            <div class="search">
+                <input type="text" placeholder="Buscar productos...">
+            </div>
+            <div class="user-info">
+                <p>Bienvenido, {{ user_id }}</p>
+                <div class="avatar"></div>
+            </div>
+        </header>
+
+        <!-- Dashboard content -->
+        <main class="content">
+            <div class="cards">
+                <div class="card dark">
+                    <h3>Mis Puntos</h3>
+                    <p class="number">1,250</p>
+                    <span>Acumula puntos por cada compra</span>
+                </div>
+                <div class="card">
+                    <h3>Última compra</h3>
+                    <p class="number">#PED-2025</p>
+                    <span>Entregado</span>
+                </div>
+                <div class="card">
+                    <h3>Pedidos activos</h3>
+                    <p class="number">2</p>
+                    <span>En proceso de envío</span>
+                </div>
+            </div>
+
+            <section class="charts">
+                <div class="chart-box">🛒 Productos recomendados</div>
+                <div class="chart-box">❤️ Favoritos</div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

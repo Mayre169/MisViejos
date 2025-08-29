@@ -13,7 +13,7 @@ BEGIN
     email_user := UPPER(TRIM(email_user));
     
     -- Se combinan la verificación de existencia y la obtención de datos en una sola consulta.
-    SELECT TRUE INTO v_status
+    SELECT data_u.id_user INTO v_status
     FROM system_data.data_users AS data_u
     JOIN system_segurity_data.auth_segurity AS auth_u
       ON data_u.id_auth_fk = auth_u.id_auth 

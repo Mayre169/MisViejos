@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Admin</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard_admin.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">Mis Viejos</h2>
+        <ul class="menu">
+            <li class="active">🏠 Resumen</li>
+            <li>📦 Productos</li>
+            <li>🛒 Pedidos</li>
+            <li>👥 Usuarios</li>
+            <li>🚚 Domicilios</li>
+            <li><a href="/users/configuracion">⚙ Configuración</a></li>
+            <li>🔓 Cerrar sesión</li>
+        </ul>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Header -->
+        <header class="header">
+            <div class="search">
+                <input type="text" placeholder="Buscar...">
+            </div>
+            <div class="user-info">
+                <p>Bienvenido, Abrahan</p>
+                <div class="avatar"></div>
+            </div>
+        </header>
+
+        <!-- Dashboard content -->
+        <main class="content">
+            <div class="cards">
+                <div class="card dark">
+                    <h3>Total Ventas</h3>
+                    <p class="number">$9,328.55</p>
+                    <span>+15.6% este mes</span>
+                </div>
+                <div class="card">
+                    <h3>Visitantes</h3>
+                    <p class="number">12,302</p>
+                    <span>+12.1% esta semana</span>
+                </div>
+                <div class="card">
+                    <h3>Reembolsos</h3>
+                    <p class="number">963</p>
+                    <span>-12.7%</span>
+                </div>
+            </div>
+
+            <section class="charts">
+                <div class="chart-box">📈 Aquí irá el gráfico de ventas</div>
+                <div class="chart-box">🥇 Categorías principales</div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

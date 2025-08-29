@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <title>Registrar Usuario</title>
+</head>
+<body>
+    <main>
+        <div class="eslogan">
+            <h1>Bodega Mis Viejos</h1>
+            <p>¡Bienvenido! Completa tus datos para crear tu cuenta.</p>
+        </div>
+        <div class="form-container">
+            <form action="/users/register/user" method="post">
+                {% csrf_token %}
+                
+                <!-- campo nombre -->
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre" required>
+
+                <!-- campo apellido -->
+                <input type="text" name="apellido" id="apellido" placeholder="Apellido" required>
+
+                <!-- campo fecha de nacimiento -->
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
+
+                <!-- campo correo -->
+                <input type="email" name="email" id="email" placeholder="Correo Electrónico" required>
+
+                <!-- campo clave -->
+                <input type="password" name="password" id="password" placeholder="Contraseña" required>
+
+                <!-- boton enviar -->
+                <button type="submit">Registrar</button>
+
+                <div class="line"></div>
+
+                <!-- boton volver al login -->
+                <a href="/users/login">¿Ya tienes cuenta? Inicia sesión</a>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

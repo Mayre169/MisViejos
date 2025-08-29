@@ -1,0 +1,39 @@
+{% extends 'base_dashboard.html' %}
+
+{% load static %}
+
+{% block title %}Configuracion{% endblock %}
+
+{% block link %}<link rel="stylesheet" href="{% static 'css/configuracion.css' %}">{% endblock %}
+
+
+    <!-- Main -->
+    <div class="main" id="main">
+        {% block content %}
+        <!-- Dashboard content -->
+        <main class="content" id="main-content">
+            <!-- Sección Actualizar Datos -->
+            <section class="section-card" id="section-actualizar">
+                <h3 class="section-title">Actualizar Datos</h3>
+                <p class="section-desc">Actualiza los datos personales de tu perfil.</p>
+                <button id="btn-actualizar" class="btn-action">Actualizar Datos</button>
+            </section>
+
+            <!-- Sección Cambiar Clave -->
+            <section class="section-card" id="section-clave">
+                <h3 class="section-title">Cambiar Clave</h3>
+                <p class="section-desc">Si sientes inseguridad de tu actual clave tienes la opción de actualizarla.</p>
+                <button id="btn-clave" class="btn-action">Cambiar Clave</button>
+            </section>
+        </main>
+        {% endblock %}
+    </div>
+
+{% block extra_scripts %}
+    <script src="{% static 'js/configuracion.js' %}"></script>
+    <script>
+        const menu = document.querySelector('.menu');
+        menu.children[5].classList.add('active')
+    </script>
+{% endblock %}
+

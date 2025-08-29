@@ -1,0 +1,210 @@
+{% extends "base_dashboard.html" %}
+
+{% block bootstrap %}<!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}Domicilios - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+
+    <!-- Métricas -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Domicilios</h5>
+                    <h3>350</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Entregados</h5>
+                    <h3>280</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">En Camino</h5>
+                    <h3>50</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Cancelados</h5>
+                    <h3>20</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Domicilios por Mes</h5>
+                    <canvas id="domiciliosMensuales"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Estados de Domicilios</h5>
+                    <canvas id="domiciliosEstados"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Domicilios -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Lista de Domicilios</h5>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pedido</th>
+                        <th>Cliente</th>
+                        <th>Dirección</th>
+                        <th>Estado</th>
+                        <th>Fecha Estimada</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>001</td>
+                        <td>#A123</td>
+                        <td>Juan Pérez</td>
+                        <td>Calle 123, Ciudad</td>
+                        <td><span class="badge bg-success">Entregado</span></td>
+                        <td>20/08/2025</td>
+                        <td>
+                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalleModal">Detalles</button>
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#estadoModal">Editar</button>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#cancelarModal">Cancelar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>002</td>
+                        <td>#A124</td>
+                        <td>María Gómez</td>
+                        <td>Avenida 45, Ciudad</td>
+                        <td><span class="badge bg-warning">En Camino</span></td>
+                        <td>22/08/2025</td>
+                        <td>
+                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalleModal">Detalles</button>
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#estadoModal">Editar</button>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#cancelarModal">Cancelar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+
+<!-- Detalle Modal -->
+<div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Detalles del Domicilio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Pedido:</strong> #A123</p>
+        <p><strong>Cliente:</strong> Juan Pérez</p>
+        <p><strong>Dirección:</strong> Calle 123, Ciudad</p>
+        <p><strong>Transportista:</strong> Pedro Ramírez</p>
+        <p><strong>Estado:</strong> Entregado</p>
+        <p><strong>Fecha Estimada:</strong> 20/08/2025</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Editar Estado Modal -->
+<div class="modal fade" id="estadoModal" tabindex="-1" aria-labelledby="estadoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Estado del Domicilio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <select class="form-select">
+          <option>Pendiente</option>
+          <option>En Camino</option>
+          <option>Entregado</option>
+          <option>Cancelado</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cancelar Modal -->
+<div class="modal fade" id="cancelarModal" tabindex="-1" aria-labelledby="cancelarModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cancelar Domicilio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de cancelar este domicilio?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger">Sí, cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Gráfica domicilios mensuales
+  new Chart(document.getElementById('domiciliosMensuales'), {
+      type: 'bar',
+      data: {
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
+          datasets: [{
+              label: 'Domicilios',
+              data: [30, 45, 60, 50, 80, 75, 90],
+              backgroundColor: 'rgba(54, 162, 235, 0.7)'
+          }]
+      }
+  });
+
+  // Gráfica estados
+  new Chart(document.getElementById('domiciliosEstados'), {
+      type: 'pie',
+      data: {
+          labels: ['Entregados', 'En Camino', 'Cancelados'],
+          datasets: [{
+              data: [280, 50, 20],
+              backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+          }]
+      }
+  });
+</script>
+{% endblock %}

@@ -1,14 +1,17 @@
 from django.urls import path
-from .views import DataUserListView, AuthSecurityCreateView, DataUserCreate, LoginView, HomeDataProfileView, DashboardDataProfile, AddressBookView, ImgProfileView, ChangePasswordUserView
+from .views import LoginView, LoginPage, ResumenPage, RegisterPage, RegisterView, ConfigurationPage, ActualizarDatosView, ProductsPage, PedidosPage, UsuariosPage, DomiciliosPage
 
 urlpatterns = [
-path('users/', DataUserListView.as_view(), name='datauser-list'),
-path('register/auth', AuthSecurityCreateView.as_view(), name='auth-user'),
-path('register/', DataUserCreate.as_view(), name='create-new-user'),
-path('login/auth', LoginView.as_view(), name='login-user'),
-path('profile/data-basic', HomeDataProfileView.as_view(), name='user-data-basic'),
-path('profile/data', DashboardDataProfile.as_view(), name='data-profile'),
-path('profile/address', AddressBookView.as_view(), name='data-address'),
-path('profile/img', ImgProfileView.as_view(), name='img-profile'),
-path('profile/change-password', ChangePasswordUserView.as_view(), name='change-password'),
+path('login/auth', LoginView, name='login-user'),
+path('login', LoginPage, name='page-login'),
+path('register', RegisterPage, name='page-register'),
+path('register/user', RegisterView, name='register-user'),
+path('resumen', ResumenPage, name='page-resumen'),
+path('configuracion', ConfigurationPage, name='page-config'),
+path('update-data', ActualizarDatosView, name='actualizar-datos-usuario'),
+path('products', ProductsPage, name='productos_page'),
+path('pedidos', PedidosPage, name='pedidos_page'),
+path('usuarios', UsuariosPage, name='usuarios_page'),
+path('domicilios', DomiciliosPage, name='domicilios_page'),
+
 ]

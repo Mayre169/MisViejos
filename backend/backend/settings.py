@@ -11,6 +11,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from datetime import timedelta
+
+JWT_SECRET = "JWT_SECRET"
+JWT_ALG = "HS256"
+JWT_ACCESS_TTL = timedelta(minutes=30)
+
+# Cookies (en producción con HTTPS)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,6 +141,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
+    'http://127.0.0.1:5500',
 ]
 
 CORS_ALLOW_METHODS = (
@@ -146,3 +157,7 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AUTHENTICATION_BACKENDS = [
+    'myapp.auth_backends.CustomBackend',
+]

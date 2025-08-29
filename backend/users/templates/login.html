@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+    <title>Iniciar Sesion</title>
+</head>
+<body>
+    <main>
+        <div class="eslogan">
+            <h1>Bodega Mis Viejos</h1>
+            <p>te acerca a los sabores, aromas y objetos que hacen de cada momento algo especial.</p>
+        </div>
+        <div class="form-container">
+            <!-- <h2>Iniciar Sesion</h2>
+            <p>No te encuentras registrado? <span>haz click</span></p> -->
+            <!-- formulario de inicio de sesion -->
+            <form action="login/auth" method="post">
+                <!-- campo para correo electronico -->
+                <input type="email" name="email" id="email" placeholder="Correo Electronico" required>
+
+                <!-- campo para la clave -->
+                <input type="password" name="password" id="password" placeholder="Contrasena" required>
+
+                <!-- boton de envio -->
+                <button type="submit" id="btn-submit" disabled>Iniciar Sesion</button>
+
+                <!-- link para en caso de olvido de clave -->
+                <a href="#">Olvidaste la contrasena?</a>
+
+                <div class="line"></div>
+
+                <!-- Boton para Registrar nuevos usuarios -->
+                <button type="button" id="btn-register">Crear cuenta nueva</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="{% static 'js/login.js' %}"></script>
+</body>
+</html>
