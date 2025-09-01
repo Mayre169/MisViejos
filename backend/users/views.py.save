@@ -30,6 +30,7 @@ def decode_token(token: str) -> dict:
 def jwt_required(view_func):
     @wraps(view_func)
     def _wrapped(request, *args, **kwargs):
+        print(request.COOKIES)
         token = request.COOKIES.get("access_token")
         if not token:
             return JsonResponse({"detail": "No autenticado"}, status=401)
@@ -43,23 +44,26 @@ def jwt_required(view_func):
         return view_func(request, *args, **kwargs)
     return _wrapped
 
-def obtener_nom_usuario(user_id):
+def oginPage(request):
+    token = request.COOKIES.get("access_token")
+
+    payload = decode_token(token)
+
+    user_id = payload["sub"]
+
     try:
         with connection.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM usuarios_dat.obtener_nombre({user_id})")
+            cursor.execute("SELECT * FROM usuarios_dat.obtener_nombre(%s)", user_id)
             result = cursor.fetchone()
 
             if result:
                 usu_nom = result[0]
 
-                return usu_nom
-            else:
-                return HttpResponse("<h1>No se han encontrado resultados</h1>")
+                render(request, 'login.hmtl', context={'usu_nom': usu_nom})
 
     except DatabaseError as e:
-        return HttpResponse(f"<h1>Error en la BD: {str(e)}</h1>", status=400)
+            return HttpResponse(f"<h1>Error en la BD: {str(e)}</h1>", status=400>
 
-def LoginPage(request):
     return render(request, 'login.html')
 
 def RegisterPage(request):
@@ -84,8 +88,7 @@ def UsuariosPage(request):
 @jwt_required
 def DomiciliosPage(request):
     return render(request, 'domicilios.html')
-
-@jwt_required   
+    
 def ResumenPage(request):
     token = request.COOKIES.get("access_token")
     if not token:
@@ -96,18 +99,16 @@ def ResumenPage(request):
         user_id = payload["sub"]
         user_rol = payload["role"]
 
-        usu_nom = obtener_nom_usuario(user_id)
         if user_rol == 'admin':
             return render(request, 'dashboard_admin.html', {
-                'usu_nom': usu_nom,
+                'user_id': user_id,
                 'user_rol': user_rol
             })
         else:
             return render(request, 'dashboard_client.html', {
-                'usu_nom': usu_nom,
+                'user_id': user_id,
                 'user_rol': user_rol
             })
-
     except jwt.ExpiredSignatureError:
         return HttpResponse("<h1>Token expirado</h1>", status=401)
     except jwt.InvalidTokenError:
@@ -224,24 +225,3 @@ def ActualizarDatosView(request):
             return HttpResponse(f"<h1>Error en la BD: {str(e)}</h1>", status=500)
 
     return HttpResponse("<h1>Método no permitido</h1>", status=405)
-
-@jwt_required
-def ObtenerDatosActualizables(request):
-    if request.method == 'GET':
-        token = request.COOKIES.get('access_token')
-
-        if not token:
-            return HttpResponse("<h1>No autenticado</h1>", status=401)
-        
-        payload = decode_token(token)
-        user_id = payload["sub"]
-
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute(f'SELECT * FROM usuarios_dat.obtener_datos_actualizables({user_id})')
-                result = cursor.fetchone()
-
-                if result:
-                    return JsonResponse({"datos": result}, status=200)
-        except DatabaseError as e:
-            return HttpResponse(f"<h1>Error en la BD: {str(e)}</h1>", status=400)

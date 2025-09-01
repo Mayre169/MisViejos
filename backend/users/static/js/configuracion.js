@@ -7,7 +7,22 @@ document.addEventListener("DOMContentLoaded", () => {
     main.innerHTML = original;
   }
 
-  function renderActualizar() {
+  async function obtener_datos_actualizar() {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/users/datos/usuario/actualizar');
+        const data = await response.json(); // Espera a que la promesa se resuelva
+        return data; // Devuelve los datos
+    } catch (error) {
+        console.error(`Ha ocurrido un error en la petición: ${error}`);
+        return null; // En caso de error, devuelve null o un valor apropiado
+    }
+  }
+
+  async function renderActualizar() {
+    const datos_usuario = await obtener_datos_actualizar();
+
+    console.log(datos_usuario.datos[0])
+
     main.innerHTML = `
         <section class="form-section">
             <h3>Actualizar Datos</h3>
@@ -20,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     placeholder="Tu nombre" 
                     pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ]{4,20}$"
                     minlength="4" 
-                    maxlength="20" 
+                    maxlength="20"
+                    value=${datos_usuario.datos[0]}
                     required
                 >
 
@@ -32,12 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     placeholder="Tu apellido" 
                     pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ]{4,20}$"
                     minlength="4" 
-                    maxlength="20" 
+                    maxlength="20"
+                    value=${datos_usuario.datos[1]}
                     required
                 >
 
                 <label for="date">Fecha de nacimiento</label>
-                <input type="date" name="fn" id="date" required>
+                <input type="date" name="fn" id="date" value=${datos_usuario.datos[2]} required>
 
                 <div class="acciones">
                     <button type="submit" id="btn-guardar-datos" class="btn-guardar">Guardar</button>
