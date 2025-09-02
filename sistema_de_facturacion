@@ -1,0 +1,295 @@
+Primero, debes instalar WeasyPrint y sus dependencias. Abre tu terminal y ejecuta los siguientes comandos:
+
+Bash
+
+pip install WeasyPrint
+
+Dentro de tu app de Django (por ejemplo, tu_app/templates/tu_app/), crea un nuevo archivo HTML que servirá como plantilla para tu factura. Nómbralo invoice_template.html.
+
+Esta plantilla usará variables de Django para mostrar los datos de la factura que le pases desde la vista. Puedes estilizarla con CSS para que se vea profesional.
+
+tu_app/templates/tu_app/invoice_template.html
+
+este es el codigo jejejejeje
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Factura #{{ factura.factura_id }}</title>
+    <style>
+        body { font-family: sans-serif; font-size: 12px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .invoice-details { margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .total { text-align: right; font-weight: bold; font-size: 1.2em; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>FACTURA DE VENTA</h1>
+    </div>
+
+         <div class="invoice-details">
+            <p><strong>Factura Nº:</strong> {{ factura.factura_id }}</p>
+            <p><strong>Fecha:</strong> {{ factura.fecha_factura|date:"d/m/Y" }}</p>
+            <p><strong>Cliente:</strong> {{ factura.pedido.cliente.nombre }} {{ factura.pedido.cliente.apellido }}</p>
+            <p><strong>Email:</strong> {{ factura.pedido.cliente.email }}</p>
+         </div>
+
+    <h2>Detalles del Pedido</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items_pedido %}
+            <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.precio_unitario }}</td>
+                <td>${{ item.cantidad|multiply:item.precio_unitario }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total">
+        <p>TOTAL: ${{ factura.total_factura }}</p>
+        <p>Método de Pago: {{ factura.metodo_pago }}</p>
+    </div>
+</body>
+</html>
+
+crea un nuevo archivo en tu_app/templatetags/tu_app_extras.py. Asegúrate de que la carpeta templatetags exista y contenga un archivo __init__.py.
+
+tu_app/templatetags/tu_app_extras.py
+
+from django import template
+
+register = template.Library()
+
+@register.filter
+def multiply(value, arg):
+    """Multiplica el valor por el argumento."""
+    return float(value) * float(arg)
+
+
+
+    Luego, en la plantilla, debes cargarlo con {% load tu_app_extras %}
+
+
+    Esta es la parte central. En tu archivo views.py, crearás una función que:
+
+Obtiene los datos de la factura y los productos de la base de datos.
+
+Renderiza la plantilla HTML con esos datos.
+
+Usa WeasyPrint para convertir el HTML renderizado a PDF.
+
+Devuelve el PDF como una respuesta HTTP.
+
+tu_app/views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from weasyprint import HTML
+from .models import Facturas, Detalle_Pedido
+
+def generar_factura_pdf(request, factura_id):
+    # 1. Obtener los datos de la factura de la base de datos
+    factura = get_object_or_404(Facturas, pk=factura_id)
+    items_pedido = Detalle_Pedido.objects.filter(pedido=factura.pedido)
+
+    # 2. Renderizar la plantilla HTML con los datos
+    html_string = render_to_string('tu_app/invoice_template.html', {
+        'factura': factura,
+        'items_pedido': items_pedido,
+    })
+
+    # 3. Convertir el HTML a PDF usando WeasyPrint
+    html = HTML(string=html_string)
+    pdf = html.write_pdf()
+
+    # 4. Devolver la respuesta HTTP con el PDF
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="factura_{factura.factura_id}.pdf"'
+    return response    
+
+    Finalmente, debes crear una URL para que los usuarios puedan acceder a esta vista. En tu archivo urls.py de tu app, agrega la siguiente ruta:
+
+tu_app/urls.py
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    # ... otras URLs
+    path('factura/<int:factura_id>/pdf/', views.generar_factura_pdf, name='generar_factura_pdf'),
+]
+
+Ahora, cuando un cliente termine su compra, podrías dirigirlo a una URL como http://tudominio.com/factura/123/pdf/ para que su navegador descargue o muestre la factura en PDF.
+
+
+
+
+ahora viene el css jasjdajasjdf
+
+Copia y pega este código en la sección <style> del archivo invoice_template.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Factura #{{ factura.factura_id }}</title>
+    <style>
+        /* Estilos generales para el cuerpo de la página */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+            /* Contenedor principal de la factura */
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Encabezado de la factura */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #4CAF50; /* Color principal */
+            font-size: 2em;
+            margin: 0;
+        }
+
+        /* Sección de detalles de la factura y el cliente */
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .invoice-details .info-block {
+            width: 48%;
+        }
+
+        /* Estilo para los títulos de sección */
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        /* Estilos para la tabla de productos */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f7f7f7;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Estilo para la sección de totales */
+        .total-section {
+            text-align: right;
+            margin-top: 30px;
+        }
+        .total-section p {
+            font-size: 1.2em;
+            margin: 5px 0;
+        }
+        .total-section .total-amount {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FACTURA DE VENTA</h1>
+        </div>
+
+        <div class="invoice-details">
+            <div class="info-block">
+                <p><strong>Factura Nº:</strong> {{ factura.factura_id }}</p>
+                <p><strong>Fecha:</strong> {{ factura.fecha_factura|date:"d/m/Y" }}</p>
+                <p><strong>Método de Pago:</strong> {{ factura.metodo_pago }}</p>
+            </div>
+            <div class="info-block">
+                <p><strong>Cliente:</strong> {{ factura.pedido.cliente.nombre }} {{ factura.pedido.cliente.apellido }}</p>
+                <p><strong>Email:</strong> {{ factura.pedido.cliente.email }}</p>
+            </div>
+        </div>
+
+        <h2>Detalles del Pedido</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items_pedido %}
+                <tr>
+                    <td>{{ item.producto.nombre }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.precio_unitario }}</td>
+                    <td>${{ item.cantidad|multiply:item.precio_unitario }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <p>TOTAL: <span class="total-amount">${{ factura.total_factura }}</span></p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+Para que el CSS funcione, he hecho un par de cambios menores en tu código HTML para que coincida con las clases del CSS:
+
+He agregado un div con la clase container para centrar y dar un borde a la factura.
+
+He reorganizado el div invoice-details y agregado dos divs con la clase info-block para organizar mejor los datos del cliente y la factura en dos columnas.
+
+He cambiado la clase total a total-section y he añadido una clase total-amount para el valor del total.
+
+Ahora, cuando tu vista de Django renderice esta plantilla, el PDF resultante se verá mucho más limpio y profesional.
+
+
+segun todo esto ya dberia funcionar la facturacion  me avisaaaaaaaaaa
